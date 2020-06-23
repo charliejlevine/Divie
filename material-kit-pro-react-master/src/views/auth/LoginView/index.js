@@ -21,7 +21,7 @@ import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
 import LoginForm from './LoginForm';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     justifyContent: 'center',
     backgroundColor: theme.palette.background.dark,
@@ -82,24 +82,13 @@ function LoginView() {
   };
 
   return (
-    <Page
-      className={classes.root}
-      title="Login"
-    >
+    <Page className={classes.root} title="Login">
       <Container maxWidth="md">
-        <Box
-          mb={8}
-          display="flex"
-          alignItems="center"
-        >
+        <Box mb={8} display="flex" alignItems="center">
           <RouterLink to="/">
             <Logo />
           </RouterLink>
-          <Button
-            component={RouterLink}
-            to="/"
-            className={classes.backButton}
-          >
+          <Button component={RouterLink} to="/" className={classes.backButton}>
             Back to home
           </Button>
         </Box>
@@ -108,30 +97,16 @@ function LoginView() {
             <Avatar className={classes.icon}>
               <LockIcon fontSize="large" />
             </Avatar>
-            <Typography
-              variant="h2"
-              color="textPrimary"
-            >
+            <Typography variant="h2" color="textPrimary">
               Sign in
             </Typography>
-            <Typography
-              variant="subtitle1"
-              color="textSecondary"
-            >
+            <Typography variant="subtitle1" color="textSecondary">
               Sign in on the internal platform
             </Typography>
             <Box mt={2}>
-              <Alert
-                severity="info"
-              >
+              <Alert severity="info">
                 <div>
-                  Use
-                  {' '}
-                  <b>admin@devias.io</b>
-                  {' '}
-                  and password
-                  {' '}
-                  <b>admin</b>
+                  Use <b>admin@devias.io</b> and password <b>admin</b>
                 </div>
               </Alert>
             </Box>
@@ -155,33 +130,16 @@ function LoginView() {
             image="/static/images/auth.png"
             title="Cover"
           >
-            <Typography
-              color="inherit"
-              variant="subtitle1"
-            >
-              Hella narvwhal Cosby sweater McSweeney&apos;s,
-              salvia kitsch before they sold out High Life.
+            <Typography color="inherit" variant="subtitle1">
+              This is a test. Lets see if it works...
             </Typography>
-            <Box
-              alignItems="center"
-              display="flex"
-              mt={3}
-            >
-              <Avatar
-                alt="Person"
-                src="/static/images/avatars/avatar_2.png"
-              />
+            <Box alignItems="center" display="flex" mt={3}>
+              <Avatar alt="Person" src="/static/images/avatars/avatar_2.png" />
               <Box ml={3}>
-                <Typography
-                  color="inherit"
-                  variant="body1"
-                >
+                <Typography color="inherit" variant="body1">
                   Ekaterina Tankova
                 </Typography>
-                <Typography
-                  color="inherit"
-                  variant="body2"
-                >
+                <Typography color="inherit" variant="body2">
                   Manager at inVision
                 </Typography>
               </Box>
