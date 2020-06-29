@@ -17,7 +17,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 import Chart from './Chart';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   current: {
     marginTop: theme.spacing(0.5),
@@ -57,7 +57,7 @@ function RealTime({ className, ...rest }) {
 
   const getData = useCallback(() => {
     if (isMountedRef.current) {
-      setData((prevData) => {
+      setData(prevData => {
         const newData = [...prevData];
 
         newData.shift();
@@ -69,7 +69,7 @@ function RealTime({ className, ...rest }) {
 
     setTimeout(() => {
       if (isMountedRef.current) {
-        setData((prevData) => {
+        setData(prevData => {
           const newData = [...prevData];
           const random = getRandomInt(100, 200);
 
@@ -108,35 +108,24 @@ function RealTime({ className, ...rest }) {
   ];
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <CardHeader
-        action={(
-          <Typography
-            color="inherit"
-            variant="h3"
-          >
-            {
-              data[data.length - 1] === 0
-                ? data[data.length - 2]
-                : data[data.length - 1]
-            }
+        action={
+          <Typography color="inherit" variant="h3">
+            {data[data.length - 1] === 0
+              ? data[data.length - 2]
+              : data[data.length - 1]}
           </Typography>
-        )}
+        }
         classes={{ action: classes.current }}
-        subheader="Page views per second"
+        subheader="Dividend premium change per second"
         subheaderTypographyProps={{ color: 'textSecondary', variant: 'body2' }}
-        title="Active users"
+        title="Dividend payouts"
         titleTypographyProps={{ color: 'textPrimary' }}
       />
-      <Chart
-        data={data}
-        labels={labels}
-      />
+      <Chart data={data} labels={labels} />
       <List>
-        {pages.map((page) => (
+        {pages.map(page => (
           <ListItem
             classes={{ divider: classes.itemDivider }}
             divider
@@ -144,24 +133,17 @@ function RealTime({ className, ...rest }) {
           >
             <ListItemText
               primary={page.pathname}
-              primaryTypographyProps={{ color: 'textSecondary', variant: 'body2' }}
+              primaryTypographyProps={{
+                color: 'textSecondary',
+                variant: 'body2'
+              }}
             />
-            <Typography color="inherit">
-              {page.views}
-            </Typography>
+            <Typography color="inherit">{page.views}</Typography>
           </ListItem>
         ))}
       </List>
-      <Box
-        p={2}
-        display="flex"
-        justifyContent="flex-end"
-      >
-        <Button
-          component={RouterLink}
-          size="small"
-          to="#"
-        >
+      <Box p={2} display="flex" justifyContent="flex-end">
+        <Button component={RouterLink} size="small" to="#">
           See all
           <NavigateNextIcon className={classes.navigateNextIcon} />
         </Button>
