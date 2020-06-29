@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-const GA_MEASUREMENT_ID = process.env.REACT_APP_GA_MEASUREMENT_ID;
+const GA_MEASUREMENT_ID = 'G-BJN2S8K7CP';
 
 function GoogleAnalytics() {
   return (
