@@ -38,3 +38,5 @@ Getting started
 
 * Link to deployed site -> https://divieapp.web.app/home
 
+* Link to firestore docs -> https://firebase.google.com/docs/firestore/manage-data/add-data#web
+
