@@ -16,7 +16,7 @@ import {
 import { APP_VERSION } from 'src/config';
 import Logo from 'src/components/Logo';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.default
   },
@@ -44,23 +44,14 @@ function TopBar({ className, ...rest }) {
   const classes = useStyles();
 
   return (
-    <AppBar
-      className={clsx(classes.root, className)}
-      color="default"
-      {...rest}
-    >
+    <AppBar className={clsx(classes.root, className)} color="default" {...rest}>
       <Toolbar className={classes.toolbar}>
         <RouterLink to="/">
           <Logo className={classes.logo} />
         </RouterLink>
         <Hidden mdDown>
-          <Typography
-            variant="caption"
-            color="textSecondary"
-          >
-            Version
-            {' '}
-            {APP_VERSION}
+          <Typography variant="caption" color="textSecondary">
+            Version {APP_VERSION}
           </Typography>
         </Hidden>
         <Box flexGrow={1} />
@@ -74,7 +65,7 @@ function TopBar({ className, ...rest }) {
         >
           Dashboard
         </Link>
-        <Link
+        {/*<Link
           className={classes.link}
           color="textSecondary"
           component={RouterLink}
@@ -83,16 +74,16 @@ function TopBar({ className, ...rest }) {
           variant="body2"
         >
           Documentation
-        </Link>
+        </Link>*/}
         <Divider className={classes.divider} />
         <Button
           color="secondary"
-          component="a"
-          href="https://material-ui.com/store/items/devias-kit-pro"
+          component={RouterLink}
+          to="/app"
           variant="contained"
           size="small"
         >
-          Get the kit
+          Sign in
         </Button>
       </Toolbar>
     </AppBar>

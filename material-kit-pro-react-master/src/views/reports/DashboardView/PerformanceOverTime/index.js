@@ -60,6 +60,7 @@ function PerformanceOverTime({ className, ...rest }) {
       <CardContent>
         <PerfectScrollbar>
           <Box height={375} minWidth={500}>
+            {/*add new chart component here for a vertically scrolling wheel of charts*/}
             <Chart
               className={classes.chart}
               data={performance.thisYear.data}
