@@ -10,3 +10,5 @@ deploy:
   provider: firebase
   token:
     secure: FIREBASE_TOKEN=<token>
+  on:
+    branch: travis-ci
