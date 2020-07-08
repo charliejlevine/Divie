@@ -1,6 +1,8 @@
 language: node_js
 node_js: 'lts/*'
-install: npm install
+install:
+  - cd material-kit-pro-react-master
+  - npm install
 script: npm run build
 branches:
   only: travis-ci
