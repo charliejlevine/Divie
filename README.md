@@ -1,5 +1,7 @@
 # Divie
 
+[![Build Status](https://travis-ci.com/jamilgonzalez/Divie.svg?token=LcisspBzgFvB7EyuoCwX&branch=master)](https://travis-ci.com/jamilgonzalez/Divie)
+
 Getting started
   Before proceeding you’ll need to have the last stabel NodeJS and npm installed on your machine.
   You can use nvm (macOS/Linux) or nvm-windows to switch Node versions between different projects.
