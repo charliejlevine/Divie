@@ -10,7 +10,7 @@ export const REGISTER = '@account/register';
 export const UPDATE_PROFILE = '@account/update-profile';
 
 export function login(email, password) {
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       dispatch({ type: LOGIN_REQUEST });
 
@@ -30,16 +30,17 @@ export function login(email, password) {
 }
 
 export function setUserData(user) {
-  return (dispatch) => dispatch({
-    type: SILENT_LOGIN,
-    payload: {
-      user
-    }
-  });
+  return dispatch =>
+    dispatch({
+      type: SILENT_LOGIN,
+      payload: {
+        user
+      }
+    });
 }
 
 export function logout() {
-  return async (dispatch) => {
+  return async dispatch => {
     authService.logout();
 
     dispatch({
@@ -49,16 +50,19 @@ export function logout() {
 }
 
 export function register() {
+  console.log('testest');
   return true;
 }
 
 export function updateProfile(update) {
   const request = axios.post('/api/account/profile', { update });
 
-  return (dispatch) => {
-    request.then((response) => dispatch({
-      type: UPDATE_PROFILE,
-      payload: response.data
-    }));
+  return dispatch => {
+    request.then(response =>
+      dispatch({
+        type: UPDATE_PROFILE,
+        payload: response.data
+      })
+    );
   };
 }
