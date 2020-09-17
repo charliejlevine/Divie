@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const firebase = require('firebase');
 const config = require('./config');
+// gets us past CORS errors
+const cors = require('cors')({ origin: true });
 
 // The Firebase Admin SDK to access Cloud Firestore.
 const admin = require('firebase-admin');
@@ -28,121 +30,106 @@ main.use(bodyParser.urlencoded({ extended: false }));
 //initialize the database and the auth
 const db = admin.firestore();
 const auth = firebase.auth();
-const userCollection = 'users';
-
-// define google cloud function name
-//export const webApi = functions.https.onRequest(main);
 
 // Create new user
 exports.signUp = functions.https.onRequest((req, res) => {
-  /*
-            We get the new user data from the 
-            body of the request we sent
-        */
-  const newUser = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    password: req.body.password
-  };
-  let userId;
-  const defaultImg = 'defaultImg.png';
+  cors(req, res, () => {
+    const newUser = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password
+    };
+    let userId;
+    const defaultImg = 'defaultImg.png';
 
-  if (newUser.password.trim().length < 6) {
-    return res
-      .status(400)
-      .json({ message: 'Password must be at least 6 characters.' });
-  }
-  /*
-        Now we are going to try to create a new user
-        Before we create a new user we need to check 
-        if the user already exists by checking his email
-    */
-  db.doc(`/users/${newUser.email}`)
-    .get()
-    .then(doc => {
-      if (doc.exists) {
-        return res
-          .status(400)
-          .json({ message: 'Email has been already taken' });
-      } else {
-        return auth
-          .createUserWithEmailAndPassword(newUser.email, newUser.password)
-          .then(data => {
-            data.user.sendEmailVerification();
-            userId = data.user.uid;
+    if (newUser.password.trim().length < 6) {
+      return res
+        .status(400)
+        .json({ message: 'Password must be at least 6 characters.' });
+    }
 
-            const userCredentials = {
-              firstName: newUser.firstName,
-              lastName: newUser.lastName,
-              email: newUser.email,
-              createdAt: new Date().toISOString(),
-              userId: userId,
-              imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultImg}?alt=media`
-            };
-            return db
-              .doc(`/users/${newUser.email}`)
-              .set(userCredentials)
-              .then(data => {
-                return res.status(201).json({ message: 'sign up successful' });
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          })
-          .catch(err => {
-            /*
-                            Just an extra check
-                        */
-            console.log(err);
-            if (err.code == 'auth/email-already-in-use') {
-              return res.status(400).json({ message: 'Email Already in Use' });
-            } else {
-              return res.status(500).json({ message: err.code });
-            }
-          });
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      return res.status(500).json({ message: err.code });
-    });
-});
+    db.doc(`/users/${newUser.email}`)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return res
+            .status(400)
+            .json({ message: 'Email has been already taken' });
+        } else {
+          return auth
+            .createUserWithEmailAndPassword(newUser.email, newUser.password)
+            .then(data => {
+              data.user.sendEmailVerification();
+              userId = data.user.uid;
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send('Hello from Firebase!');
-});
-
-exports.addMessage = functions.https.onRequest(async (req, res) => {
-  // Grab the text parameter.
-  const original = req.query.text;
-  // Push the new message into Cloud Firestore using the Firebase Admin SDK.
-  const writeResult = await admin
-    .firestore()
-    .collection('messages')
-    .add({ original: original });
-  // Send back a message that we've succesfully written the message
-  res.json({ result: `Message with ID: ${writeResult.id} added.` });
-});
-
-// Listens for new messages added to /messages/:documentId/original and creates an
-// uppercase version of the message to /messages/:documentId/uppercase
-exports.makeUppercase = functions.firestore
-  .document('/messages/{documentId}')
-  .onCreate((snap, context) => {
-    // Grab the current value of what was written to Cloud Firestore.
-    const original = snap.data().original;
-
-    // Access the parameter `{documentId}` with `context.params`
-    functions.logger.log('Uppercasing', context.params.documentId, original);
-
-    const uppercase = original.toUpperCase();
-
-    // You must return a Promise when performing asynchronous tasks inside a Functions such as
-    // writing to Cloud Firestore.
-    // Setting an 'uppercase' field in Cloud Firestore document returns a Promise.
-    return snap.ref.set({ uppercase }, { merge: true });
+              const userCredentials = {
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                email: newUser.email,
+                createdAt: new Date().toISOString(),
+                userId: userId,
+                imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultImg}?alt=media`
+              };
+              return db
+                .doc(`/users/${newUser.email}`)
+                .set(userCredentials)
+                .then(data => {
+                  return res
+                    .status(201)
+                    .json({ message: 'sign up successful' });
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            })
+            .catch(err => {
+              console.log(err);
+              if (err.code == 'auth/email-already-in-use') {
+                return res
+                  .status(400)
+                  .json({ message: 'Email Already in Use' });
+              } else {
+                return res.status(500).json({ message: err.code });
+              }
+            });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        return res.status(500).json({ message: err.code });
+      });
   });
+});
+
+exports.login = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    const existingUser = {
+      email: req.body.email,
+      password: req.body.password
+    };
+
+    auth
+      .signInWithEmailAndPassword(existingUser.email, existingUser.password)
+      .then(data => {
+        if (data.user.emailVerified) return data.user.getIdToken();
+        else
+          return res
+            .status(403)
+            .json({ message: 'please verify your email address' });
+      })
+      .then(token => {
+        return res.json({ token });
+      })
+      .catch(err => {
+        console.log(err);
+
+        if (
+          err.code === 'auth/wrong-password' ||
+          err.code === 'auth/user-not-found'
+        )
+          return res.status(403).json({ message: 'Invalid Credentials' });
+        else return res.status(500).json({ message: err.code });
+      });
+  });
+});
