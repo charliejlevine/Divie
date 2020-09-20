@@ -102,24 +102,27 @@ exports.signUp = functions.https.onRequest((req, res) => {
   });
 });
 
-exports.login = functions.https.onRequest((req, res) => {
+
+// User login
+exports.login = functions.https.onRequest( (req, res) => {
+
   cors(req, res, () => {
     const existingUser = {
       email: req.body.email,
       password: req.body.password
     };
+ 
+    auth.signInWithEmailAndPassword(existingUser.email, existingUser.password)
+    .then( data => {
 
-    auth
-      .signInWithEmailAndPassword(existingUser.email, existingUser.password)
-      .then(data => {
-        if (data.user.emailVerified) return data.user.getIdToken();
-        else
-          return res
-            .status(403)
-            .json({ message: 'please verify your email address' });
-      })
-      .then(token => {
-        return res.json({ token });
+      if (data.user.emailVerified) {
+        const token = data.user.getIdToken();
+        return token;
+      } else {
+          return res.status(403).json({ message: 'please verify your email address' })
+       }
+    }).then(token => {
+        return res.json( { token } );
       })
       .catch(err => {
         console.log(err);
@@ -127,9 +130,33 @@ exports.login = functions.https.onRequest((req, res) => {
         if (
           err.code === 'auth/wrong-password' ||
           err.code === 'auth/user-not-found'
-        )
-          return res.status(403).json({ message: 'Invalid Credentials' });
-        else return res.status(500).json({ message: err.code });
+        ) {
+          return res.status(403).json({ message: 'Email or password incorrect' });
+        } else {
+          return res.status(500).json({ message: err.code });
+        }
       });
+  });
+});
+
+// Returns current user data
+exports.getUserData = functions.https.onRequest( (req, res) => {
+
+  cors(req, res, () => {
+    const currentUser = {
+      email: req.body.email
+    };
+
+    db.doc(`users/${currentUser.email}`).get()
+    .then( snapshot => {
+      const data = snapshot.data()
+      return data;
+    }).then( data => {
+      return res.json( { data })
+    })
+    .catch( error => {
+      console.log(error)
+      res.status(500).send( {error: "error in getting data"} )
+    });
   });
 });

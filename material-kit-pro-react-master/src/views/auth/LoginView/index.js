@@ -78,7 +78,7 @@ function LoginView() {
   const history = useHistory();
 
   const handleSubmitSuccess = () => {
-    history.push('/app');
+    history.push('/app/reports/dashboard');
   };
 
   return (
@@ -131,7 +131,6 @@ function LoginView() {
             title="Cover"
           >
             <Typography color="inherit" variant="subtitle1">
-              This is a test. Lets see if it works...
             </Typography>
             <Box alignItems="center" display="flex" mt={3}>
               <Avatar alt="Person" src="/static/images/avatars/avatar_2.png" />

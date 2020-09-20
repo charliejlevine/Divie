@@ -1,5 +1,6 @@
 import axios from 'src/utils/axios';
 import authService from 'src/services/authService';
+import { DayBgRow } from '@fullcalendar/daygrid';
 
 export const LOGIN_REQUEST = '@account/login-request';
 export const LOGIN_SUCCESS = '@account/login-success';
@@ -9,20 +10,68 @@ export const LOGOUT = '@account/logout';
 export const REGISTER = '@account/register';
 export const UPDATE_PROFILE = '@account/update-profile';
 
-export function login(email, password) {
+
+export function login(email, password, onSubmitSuccess) {
   return async dispatch => {
     try {
-      // what is this and where do we reroute to dashboard?
-      dispatch({ type: LOGIN_REQUEST });
+      // 1. verify email and password through cloud fn 
+      fetch('https://us-central1-divieapp.cloudfunctions.net/login', {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      })
+      .then(response => response.json())
+      .then(res => {
 
-      const user = await authService.loginWithEmailAndPassword(email, password);
+        // 2. recieve user object with token
+        const token = res.token;
 
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: {
-          user
-        }
-      });
+        // 3. Gets user info to update state
+        fetch('https://us-central1-divieapp.cloudfunctions.net/getUserData', {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email
+          })
+        }).then( response => response.json() )
+        .then( res => {
+
+          const user = {
+            firstName: res.data.firstName,
+            lastName: res.data.lastName
+          }
+
+          // 3. send payload to my root reducer
+          dispatch({
+            type: LOGIN_SUCCESS,
+            payload: {
+              user
+            }
+          });
+          // forward to dashboard
+          onSubmitSuccess();
+
+        }).catch (error => {
+          alert(error)
+        });
+        
+        })
+        .catch(error => {
+          alert(error);
+        });
+
+       // 4. forward to my dashboard in login
+      return true;
+
     } catch (error) {
       dispatch({ type: LOGIN_FAILURE });
       throw error;
@@ -50,9 +99,7 @@ export function logout() {
   };
 }
 
-export function register(values) {
-  console.log('testest');
-  // make call to our backend
+export function register(values, onSubmitSuccess) {
   fetch('https://us-central1-divieapp.cloudfunctions.net/signUp', {
     method: 'POST',
     headers: {
@@ -68,11 +115,15 @@ export function register(values) {
   })
     .then(response => response.json())
     .then(res => {
-      // TODO: change the success to a modal instead of alert and redirect to a welcome screen
-      alert(res.message);
+      if (res.message === "Email has been already taken") {
+        alert(res.message);
+      } else {
+        alert('Account Created! Confirmation email sent.')
+        onSubmitSuccess(); 
+      }
     })
     .catch(error => {
-      console.log(error);
+      alert(error);
     });
 
   return true;
