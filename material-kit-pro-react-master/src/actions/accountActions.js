@@ -29,6 +29,7 @@ export function login(email, password, onSubmitSuccess) {
       .then(response => response.json())
       .then(res => {
         if (res.message !== 'Email or password incorrect') {
+          
           // 2. recieve user object with token
           // Don't know what to do with token yet
           const token = res.token;
