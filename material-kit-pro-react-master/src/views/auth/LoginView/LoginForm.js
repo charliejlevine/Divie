@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import { login } from 'src/actions/accountActions';
 
+
 const useStyles = makeStyles(() => ({
   root: {}
 }));
@@ -37,8 +38,8 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
         setSubmitting
       }) => {
         try {
-          await dispatch(login(values.email, values.password));
-          onSubmitSuccess();
+          await dispatch(login(values.email, values.password, onSubmitSuccess));
+          
         } catch (error) {
           const message = (error.response && error.response.data.message) || 'Something went wrong';
 

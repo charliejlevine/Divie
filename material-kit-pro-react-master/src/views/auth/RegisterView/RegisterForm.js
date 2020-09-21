@@ -15,6 +15,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { register } from 'src/actions/accountActions';
+import Redirect from 'react-router-dom'
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -51,10 +52,14 @@ function RegisterForm({ className, onSubmitSuccess, ...rest }) {
         policy: Yup.boolean().oneOf([true], 'This field must be checked')
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+
+        if (values !== 'underfined') {
+          values.firstName = values.firstName.charAt(0).toUpperCase() + values.firstName.slice(1);
+          values.lastName = values.lastName.charAt(0).toUpperCase() + values.lastName.slice(1);
+        }
+        
         try {
-          // TODO: send values to database here
-          await dispatch(register(values));
-          onSubmitSuccess();
+          await dispatch(register(values, onSubmitSuccess));
         } catch (error) {
           setStatus({ success: false });
           setErrors({ submit: error.message });
