@@ -122,7 +122,7 @@ exports.login = functions.https.onRequest( (req, res) => {
           return res.status(403).json({ message: 'please verify your email address' })
        }
     }).then(token => {
-        return res.json( { token } );
+        return res.json({token});
       })
       .catch(err => {
         console.log(err);
@@ -133,7 +133,7 @@ exports.login = functions.https.onRequest( (req, res) => {
         ) {
           return res.status(403).json({ message: 'Email or password incorrect' });
         } else {
-          return res.status(500).json({ message: err.code });
+          return res.status(500).json({ message: 'Error in login'});
         }
       });
   });
@@ -147,16 +147,33 @@ exports.getUserData = functions.https.onRequest( (req, res) => {
       email: req.body.email
     };
 
-    db.doc(`users/${currentUser.email}`).get()
+    db.doc(`users/${currentUser.email}`)
+    .get()
     .then( snapshot => {
       const data = snapshot.data()
       return data;
-    }).then( data => {
-      return res.json( { data })
     })
-    .catch( error => {
-      console.log(error)
-      res.status(500).send( {error: "error in getting data"} )
+    .then( data => {
+      return res.json({data})
+    })
+    .catch( err => {
+      console.log(err)
+      return res.status(500).send( {error: "error in getting data"} )
     });
+  });
+});
+
+// logout
+exports.logout = functions.https.onRequest( (req, res) => {
+  cors(req, res, () => {
+    auth.signOut().then( () => {
+      return res.send( {message: 'Logout success'})
+    })
+    .catch( err =>{
+      // log errors don't send them back to client
+      // may contain sensitive data
+      console.log(err)
+      return res.status(500).json({message: 'Error in logout'})
+    })
   });
 });
