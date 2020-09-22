@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
+
 import {
   Box,
   Button,
@@ -15,7 +16,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { register } from 'src/actions/accountActions';
-import Redirect from 'react-router-dom'
+
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -23,7 +24,6 @@ const useStyles = makeStyles(() => ({
 
 function RegisterForm({ className, onSubmitSuccess, ...rest }) {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
   return (
     <Formik
@@ -59,11 +59,17 @@ function RegisterForm({ className, onSubmitSuccess, ...rest }) {
         }
         
         try {
-          await dispatch(register(values, onSubmitSuccess));
+          if(!register(values)){
+            onSubmitSuccess()
+          } else {
+            console.log('here')
+          }
+          
         } catch (error) {
-          setStatus({ success: false });
-          setErrors({ submit: error.message });
-          setSubmitting(false);
+          console.log(error)
+          setStatus({ success: false })
+          setErrors({ submit: error.message })
+          setSubmitting(false)
         }
       }}
     >
@@ -152,7 +158,6 @@ function RegisterForm({ className, onSubmitSuccess, ...rest }) {
           <Box mt={2}>
             <Button
               color="secondary"
-              disabled={isSubmitting}
               fullWidth
               size="large"
               type="submit"

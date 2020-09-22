@@ -60,7 +60,7 @@ function Hero({ className, ...rest }) {
                 Introducing
               </Typography>
               <Typography variant="h1" color="textPrimary">
-                Divie
+                <h1>Divie</h1>
               </Typography>
               <Box mt={3}>
                 <Typography variant="body1" color="textSecondary">

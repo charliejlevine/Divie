@@ -119,13 +119,12 @@ exports.login = functions.https.onRequest( (req, res) => {
         const token = data.user.getIdToken();
         return token;
       } else {
-          return res.status(403).json({ message: 'please verify your email address' })
+          throw Error
        }
     }).then(token => {
-        return res.json({token});
+        return res.json({token, message: 'Login success'});
       })
       .catch(err => {
-        console.log(err);
 
         if (
           err.code === 'auth/wrong-password' ||
@@ -133,7 +132,8 @@ exports.login = functions.https.onRequest( (req, res) => {
         ) {
           return res.status(403).json({ message: 'Email or password incorrect' });
         } else {
-          return res.status(500).json({ message: 'Error in login'});
+          console.log(err)
+          return res.status(403).json({ message: 'Please verify your email address' })
         }
       });
   });
