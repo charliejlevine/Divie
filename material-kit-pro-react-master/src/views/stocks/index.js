@@ -46,14 +46,14 @@ function ApexChartsView() {
             to="/app/extra"
             component={RouterLink}
           >
-            Extra
+            Stocks
           </Link>
           <Typography variant="body1" color="textPrimary">
-            Charts
+            Historical
           </Typography>
         </Breadcrumbs>
         <Typography variant="h3" color="textPrimary">
-          ApexCharts
+          Last 14 Days
         </Typography>
         <Box mt={3}>
           <Grid container spacing={3}>

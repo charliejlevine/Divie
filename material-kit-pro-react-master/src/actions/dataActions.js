@@ -42,7 +42,7 @@ export function fetchLast14Days(ticker) {
         };
         return node;
       });
-      // triggers reducer which changes global state chich will update front end
+      // triggers reducer which changes global state which will update front end
       dispatch({ type: DATA_SUCCESS, payload: last14Days });
     });
   };

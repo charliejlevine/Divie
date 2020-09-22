@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Chart from 'react-apexcharts';
 import { Card, CardContent, Typography, useTheme } from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchLast14Days } from '../../actions/dataActions';
 
 function Last14DaysChart() {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  // acts as a componentDidMount
+  useEffect(() => {
+    dispatch(fetchLast14Days('TSLA'));
+  }, []);
+
+  // getting isLoaded field from global state
+  const isLoaded = useSelector(state => state.data.isLoaded);
+  const data = useSelector(state => state.data.items);
+
+  if (!isLoaded)
+    return (
+      <Card>
+        <CardContent>
+          <Typography variant="h4" color="textPrimary">
+            Loading...
+          </Typography>
+        </CardContent>
+      </Card>
+    );
+
   const chart = {
     options: {
       chart: {
@@ -66,7 +90,7 @@ function Last14DaysChart() {
           color: theme.palette.divider
         },
         categories: [
-          '01 Jan',
+          data[0].date,
           '02 Jan',
           '03 Jan',
           '04 Jan',
@@ -148,7 +172,7 @@ function Last14DaysChart() {
     <Card>
       <CardContent>
         <Typography variant="h4" color="textPrimary">
-          Web Traffic
+          Tesla
         </Typography>
         <Chart type="line" height="300" {...chart} />
       </CardContent>
