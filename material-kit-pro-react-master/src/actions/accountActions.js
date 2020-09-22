@@ -28,7 +28,7 @@ export function login(email, password, onSubmitSuccess) {
       })
       .then(response => response.json())
       .then(res => {
-        console.log(res)
+
         res.message = res.message.toUpperCase()
 
         if (res.message !== 'EMAIL OR PASSWORD INCORRECT' &&
@@ -37,6 +37,7 @@ export function login(email, password, onSubmitSuccess) {
           // 2. recieve user object with token
           // Don't know what to do with token yet
           const token = res.token;
+
 
           // 3. Gets user info to update state
           fetch('https://us-central1-divieapp.cloudfunctions.net/getUserData', {
@@ -52,8 +53,6 @@ export function login(email, password, onSubmitSuccess) {
           .then(response => response.json())
           .then(res => {
 
-            console.log(res)
-
             // going to update user state with more later
             const user = {
               firstName: res.data.firstName,
@@ -68,10 +67,7 @@ export function login(email, password, onSubmitSuccess) {
                 user
               }
             })
-
-            // forward to dashboard
             onSubmitSuccess()
-          
           })
           .catch (error => {
             alert(error)
@@ -86,7 +82,7 @@ export function login(email, password, onSubmitSuccess) {
         throw Error
       })
     } catch (error) {
-      dispatch({ type: LOGIN_FAILURE });
+      dispatch({type: LOGIN_FAILURE});
     }
   };
 }
@@ -129,7 +125,7 @@ export function logout() {
   }
 }
 
-export function register(values, onSubmitSuccess) {
+export function register(values) {
   fetch('https://us-central1-divieapp.cloudfunctions.net/signUp', {
     method: 'POST',
     headers: {
@@ -147,16 +143,17 @@ export function register(values, onSubmitSuccess) {
     .then(res => {
       if (res.message === "Email has been already taken") {
         alert(res.message);
+        return false
       } else {
-        alert('Account Created! Confirmation email sent.')
-        onSubmitSuccess(); 
+        return true
       }
+
     })
     .catch(error => {
+      console.log('in error')
       alert(error);
+      throw Error
     });
-
-  return true;
 }
 
 export function updateProfile(update) {

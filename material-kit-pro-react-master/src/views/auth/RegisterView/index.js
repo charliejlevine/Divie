@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import Alert from 'react-bootstrap/alert'
 import {
   Box,
   Button,

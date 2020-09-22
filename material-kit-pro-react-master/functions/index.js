@@ -113,9 +113,7 @@ exports.login = functions.https.onRequest( (req, res) => {
     };
  
     auth.signInWithEmailAndPassword(existingUser.email, existingUser.password)
-    .then( snapshot => {
-
-      const data = snapshot.get()
+    .then( data => {
 
       if (data.user.emailVerified) {
         const token = data.user.getIdToken();
@@ -134,6 +132,7 @@ exports.login = functions.https.onRequest( (req, res) => {
         ) {
           return res.status(403).json({ message: 'Email or password incorrect' });
         } else {
+          console.log(err)
           return res.status(403).json({ message: 'Please verify your email address' })
         }
       });
