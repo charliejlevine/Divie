@@ -3,10 +3,26 @@ import Chart from 'react-apexcharts';
 import { Card, CardContent, Typography, useTheme } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchLast14Days } from '../../actions/dataActions';
+import LoadingScreen from '../../components/LoadingScreen';
+import { Box, LinearProgress, makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    alignItems: 'center',
+    backgroundColor: theme.palette.background.default,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    justifyContent: 'center',
+    minHeight: '100%',
+    padding: theme.spacing(3)
+  }
+}));
 
 function Last14DaysChart() {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   // acts as a componentDidMount
   useEffect(() => {
@@ -17,13 +33,16 @@ function Last14DaysChart() {
   const isLoaded = useSelector(state => state.data.isLoaded);
   const data = useSelector(state => state.data.items);
 
+  // show animation while data gets loaded
   if (!isLoaded)
     return (
       <Card>
         <CardContent>
-          <Typography variant="h4" color="textPrimary">
-            Loading...
-          </Typography>
+          <div className={classes.root}>
+            <Box width={400}>
+              <LinearProgress />
+            </Box>
+          </div>
         </CardContent>
       </Card>
     );
