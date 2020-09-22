@@ -28,7 +28,12 @@ export function login(email, password, onSubmitSuccess) {
       })
       .then(response => response.json())
       .then(res => {
-        if (res.message !== 'Email or password incorrect') {
+        console.log(res)
+        res.message = res.message.toUpperCase()
+
+        if (res.message !== 'EMAIL OR PASSWORD INCORRECT' &&
+            res.message !== 'PLEASE VERIFY YOUR EMAIL ADDRESS') {
+
           // 2. recieve user object with token
           // Don't know what to do with token yet
           const token = res.token;
@@ -70,19 +75,18 @@ export function login(email, password, onSubmitSuccess) {
           })
           .catch (error => {
             alert(error)
-            throw error
+            throw Error
           })
         } else {
-          alert('Email or password incorrect')
+          alert(res.message)
         }
       })
       .catch(error => {
         alert(error)
-        throw error
+        throw Error
       })
     } catch (error) {
       dispatch({ type: LOGIN_FAILURE });
-      throw error;
     }
   };
 }
