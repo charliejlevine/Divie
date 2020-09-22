@@ -91,17 +91,19 @@ function Last14DaysChart() {
         },
         categories: [
           data[0].date,
-          '02 Jan',
-          '03 Jan',
-          '04 Jan',
-          '05 Jan',
-          '06 Jan',
-          '07 Jan',
-          '08 Jan',
-          '09 Jan',
-          '10 Jan',
-          '11 Jan',
-          '12 Jan'
+          data[1].date,
+          data[2].date,
+          data[3].date,
+          data[4].date,
+          data[5].date,
+          data[6].date,
+          data[7].date,
+          data[8].date,
+          data[9].date,
+          data[10].date,
+          data[11].date,
+          data[12].date,
+          data[13].date
         ],
         labels: {
           style: {
@@ -145,25 +147,42 @@ function Last14DaysChart() {
     },
     series: [
       {
-        name: 'Page Views',
+        name: 'Open',
         data: [
-          3350,
-          1840,
-          2254,
-          5780,
-          9349,
-          5241,
-          2770,
-          2051,
-          3764,
-          2385,
-          5912,
-          8323
+          data[0].open,
+          data[1].open,
+          data[2].open,
+          data[3].open,
+          data[4].open,
+          data[5].open,
+          data[6].open,
+          data[7].open,
+          data[8].open,
+          data[9].open,
+          data[10].open,
+          data[11].open,
+          data[12].open,
+          data[13].open
         ]
       },
       {
-        name: 'Session Duration',
-        data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35]
+        name: 'Close',
+        data: [
+          data[0].close,
+          data[1].close,
+          data[2].close,
+          data[3].close,
+          data[4].close,
+          data[5].close,
+          data[6].close,
+          data[7].close,
+          data[8].close,
+          data[9].close,
+          data[10].close,
+          data[11].close,
+          data[12].close,
+          data[13].close
+        ]
       }
     ]
   };
