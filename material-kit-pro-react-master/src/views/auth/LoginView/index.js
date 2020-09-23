@@ -94,22 +94,9 @@ function LoginView() {
         </Box>
         <Card className={classes.card}>
           <CardContent className={classes.content}>
-            <Avatar className={classes.icon}>
-              <LockIcon fontSize="large" />
-            </Avatar>
             <Typography variant="h2" color="textPrimary">
               Sign in
             </Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              Sign in on the internal platform
-            </Typography>
-            <Box mt={2}>
-              <Alert severity="info">
-                <div>
-                  Use <b>admin@devias.io</b> and password <b>admin</b>
-                </div>
-              </Alert>
-            </Box>
             <Box mt={3}>
               <LoginForm onSubmitSuccess={handleSubmitSuccess} />
             </Box>
@@ -130,19 +117,7 @@ function LoginView() {
             image="/static/images/auth.png"
             title="Cover"
           >
-            <Typography color="inherit" variant="subtitle1">
-            </Typography>
-            <Box alignItems="center" display="flex" mt={3}>
-              <Avatar alt="Person" src="/static/images/avatars/avatar_2.png" />
-              <Box ml={3}>
-                <Typography color="inherit" variant="body1">
-                  Ekaterina Tankova
-                </Typography>
-                <Typography color="inherit" variant="body2">
-                  Manager at inVision
-                </Typography>
-              </Box>
-            </Box>
+            <Typography color="inherit" variant="subtitle1"></Typography>
           </CardMedia>
         </Card>
       </Container>
