@@ -49,8 +49,7 @@ export function login(email, password, onSubmitSuccess) {
               Authorization: 'Bearer ' + token,
               Accept: 'application/json',
               'Content-Type': 'application/json',
-          }}
-          )
+          }})
           .then(response => response.json())
           .then(res => {
             console.log(res)
@@ -93,14 +92,45 @@ export function login(email, password, onSubmitSuccess) {
   };
 }
 
-export function setUserData(user) {
-  return async dispatch =>
-    dispatch({
-      type: SILENT_LOGIN,
-      payload: {
-        user
-      }
-    });
+export function setUserData() {
+  
+  return async dispatch => {
+            // 3. Gets user info to update state
+            fetch('https://us-central1-divieapp.cloudfunctions.net/getUserData', {
+              method: 'GET',
+              headers: {
+                
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }})
+            .then(response => response.json())
+            .then(res => {
+
+  
+              // going to update user state with more later
+              const user = {
+                firstName: res.data.firstName,
+                lastName: res.data.lastName,
+                avatar: res.data.imageUrl,
+                account: {
+                  user: true
+                }
+              }
+  
+              // 3. send payload to my root reducer
+              dispatch({
+                type: SILENT_LOGIN,
+                payload: {
+                  user
+                }
+              })
+            })
+            .catch (error => {
+              alert(error)
+              throw Error
+            })
+    }
 }
 
 export function logout() {
