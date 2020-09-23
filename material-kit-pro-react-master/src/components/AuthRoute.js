@@ -7,6 +7,7 @@ function AuthRoute({ component: Component, render, ...rest }) {
   const account = useSelector((state) => state.account);
 
   if (!account.user) {
+    console.log('here')
     return <Redirect to="/login" />;
   }
 

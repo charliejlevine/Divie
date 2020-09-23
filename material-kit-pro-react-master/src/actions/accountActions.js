@@ -37,28 +37,34 @@ export function login(email, password, onSubmitSuccess) {
           // 2. recieve user object with token
           // Don't know what to do with token yet
           const token = res.token;
+          localStorage.setItem('token', token)
+          console.log(localStorage.getItem('token'))
 
 
           // 3. Gets user info to update state
           fetch('https://us-central1-divieapp.cloudfunctions.net/getUserData', {
-            method: 'PUT',
+            method: 'GET',
             headers: {
+              
+              Authorization: 'Bearer ' + token,
               Accept: 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              email: email
-            })
-          })
+              'Content-Type': 'application/json',
+          }}
+          )
           .then(response => response.json())
           .then(res => {
+            console.log(res)
 
             // going to update user state with more later
             const user = {
               firstName: res.data.firstName,
               lastName: res.data.lastName,
-              avatar: res.data.imageUrl
+              avatar: res.data.imageUrl,
+              account: {
+                user: true
+              }
             }
+
 
             // 3. send payload to my root reducer
             dispatch({
@@ -88,7 +94,7 @@ export function login(email, password, onSubmitSuccess) {
 }
 
 export function setUserData(user) {
-  return dispatch =>
+  return async dispatch =>
     dispatch({
       type: SILENT_LOGIN,
       payload: {

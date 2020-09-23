@@ -144,24 +144,29 @@ exports.getUserData = functions.https.onRequest( (req, res) => {
 
   cors(req, res, () => {
     const currentUser = {
-      email: req.body.email
+      token: req.headers.authorization.split('Bearer ')[1]
     };
 
-    db.doc(`users/${currentUser.email}`)
-    .get()
-    .then( snapshot => {
-      const data = snapshot.data()
-      return data;
+    admin.auth().verifyIdToken(currentUser.token).then(decodedToken =>{
+      //console.log(decodedToken)
+      const user = decodedToken
+      db.doc(`users/${user.email}`)
+      .get()
+      .then( snapshot => {
+        const data = snapshot.data()
+        return data;
+      })
+      .then( data => {
+        return res.json({data})
+      })
+      .catch( err => {
+        console.log(err)
+        return res.status(500).send( {error: "error in getting data"} )
+      })
     })
-    .then( data => {
-      return res.json({data})
-    })
-    .catch( err => {
-      console.log(err)
-      return res.status(500).send( {error: "error in getting data"} )
-    });
-  });
-});
+
+  })
+})
 
 // logout
 exports.logout = functions.https.onRequest( (req, res) => {
@@ -175,5 +180,5 @@ exports.logout = functions.https.onRequest( (req, res) => {
       console.log(err)
       return res.status(500).json({message: 'Error in logout'})
     })
-  });
-});
+  })
+})
