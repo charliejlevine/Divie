@@ -5,6 +5,7 @@ import { DayBgRow } from '@fullcalendar/daygrid';
 export const LOGIN_REQUEST = '@account/login-request';
 export const LOGIN_SUCCESS = '@account/login-success';
 export const LOGIN_FAILURE = '@account/login-failure';
+export const EMAIL_RESENT = '@account/email-resent';
 export const SILENT_LOGIN = '@account/silent-login';
 export const LOGOUT = '@account/logout';
 export const REGISTER = '@account/register';
@@ -31,9 +32,26 @@ export function login(email, password, onSubmitSuccess) {
 
         res.message = res.message.toUpperCase()
 
-        if (res.message !== 'EMAIL OR PASSWORD INCORRECT' &&
-            res.message !== 'PLEASE VERIFY YOUR EMAIL ADDRESS') {
-
+        if (res.message === 'EMAIL OR PASSWORD INCORRECT') {
+          const message = {
+            text: 'You have entered an invalid username or password.',
+            link: null
+          };
+          dispatch({
+            type: LOGIN_FAILURE,
+            message
+          });
+        } else if (res.message === 'PLEASE VERIFY YOUR EMAIL ADDRESS') {
+          const message = {
+            text: 'Please verify your email address.',
+            link: 'Click here to resend the verification link.'
+          } 
+          dispatch({
+            type: LOGIN_FAILURE,
+            message
+          });
+        }
+        else {
           // 2. recieve user object with token
           // Don't know what to do with token yet
           const token = res.token;
@@ -78,16 +96,21 @@ export function login(email, password, onSubmitSuccess) {
             alert(error)
             throw Error
           })
-        } else {
-          alert(res.message)
         }
       })
       .catch(error => {
         alert(error)
         throw Error
       })
-    } catch (error) {
-      dispatch({type: LOGIN_FAILURE});
+    } catch (e) {
+      const message = {
+        text: 'Something went wrong. Please try again.',
+        link: null
+      };
+      dispatch({
+        type: LOGIN_FAILURE,
+        message
+      });
     }
   };
 }
@@ -203,4 +226,33 @@ export function updateProfile(update) {
       })
     );
   };
+}
+
+export function resendEmailVerification(email) {
+  return async dispatch => {
+    dispatch({
+      type: EMAIL_RESENT,
+      message: {
+        text: 'Email resent. Please check your inbox for the verification link.',
+        link: null
+      }
+    });
+  }
+
+  // fetch(
+  //   'https://us-central1-divieapp.cloudfunctions.net/resendEmailVerification',
+  //   {
+  //     method: 'POST',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       email
+  //     })
+  //   }
+  // ).catch(error => {
+  //   alert(error);
+  //   throw Error;
+  // });
 }

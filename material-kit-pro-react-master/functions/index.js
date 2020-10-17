@@ -182,3 +182,16 @@ exports.logout = functions.https.onRequest( (req, res) => {
     })
   })
 })
+
+exports.resendEmailVerification = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    auth
+      .sendSignInLinkToEmail(req.body.email)
+      .then(res => {
+        return res.status(200).send(res);
+      })
+      .catch(error => {
+        return res.status(500).send(error);
+      });
+  });
+});

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ import {
   FormHelperText,
   makeStyles
 } from '@material-ui/core';
-import { login } from 'src/actions/accountActions';
+import { login, resendEmailVerification } from 'src/actions/accountActions';
 
 
 const useStyles = makeStyles(() => ({
@@ -21,6 +21,7 @@ const useStyles = makeStyles(() => ({
 function LoginForm({ className, onSubmitSuccess, ...rest }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const message = useSelector((state) => state.account.message);
 
   return (
     <div>
@@ -68,6 +69,14 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
           onSubmit={handleSubmit}
           {...rest}
         >
+          <p>{message?.text}</p>
+          <p
+            onClick={() => {
+              dispatch(resendEmailVerification(values.email));
+            }}
+          >
+            {message?.link}
+          </p>
           <TextField
             error={Boolean(touched.email && errors.email)}
             fullWidth

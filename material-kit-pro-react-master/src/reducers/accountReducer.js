@@ -4,12 +4,14 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  EMAIL_RESENT,
   LOGOUT,
   SILENT_LOGIN,
   UPDATE_PROFILE
 } from 'src/actions/accountActions';
 
 const initialState = {
+  message: null,
   user: null,
   account: {
     user: null
@@ -34,8 +36,18 @@ const accountReducer = (state = initialState, action) => {
     }
 
     case LOGIN_FAILURE: {
-      return produce(state, () => {
-        // Maybe store error
+      const { message } = action;
+
+      return produce(state, (draft) => {
+        draft.message = message;
+      });
+    }
+
+    case EMAIL_RESENT: {
+      const { message } = action;
+
+      return produce(state, (draft) => {
+        draft.message = message;
       });
     }
 
