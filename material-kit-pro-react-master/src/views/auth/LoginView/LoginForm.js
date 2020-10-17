@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import { login } from 'src/actions/accountActions';
 
+
 const useStyles = makeStyles(() => ({
   root: {}
 }));
@@ -22,10 +23,11 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
   const dispatch = useDispatch();
 
   return (
+    <div>
     <Formik
       initialValues={{
-        email: 'admin@devias.io',
-        password: 'admin'
+        email: '',
+        password: ''
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
@@ -37,8 +39,11 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
         setSubmitting
       }) => {
         try {
-          await dispatch(login(values.email, values.password));
-          onSubmitSuccess();
+          dispatch(login(values.email, values.password, onSubmitSuccess))
+          .catch(error => {
+            console.log(error)
+            throw Error
+          })
         } catch (error) {
           const message = (error.response && error.response.data.message) || 'Something went wrong';
 
@@ -112,6 +117,7 @@ function LoginForm({ className, onSubmitSuccess, ...rest }) {
         </form>
       )}
     </Formik>
+    </div>
   );
 }
 

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
+
 import {
   Box,
   Button,
@@ -16,13 +17,13 @@ import {
 } from '@material-ui/core';
 import { register } from 'src/actions/accountActions';
 
+
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
 function RegisterForm({ className, onSubmitSuccess, ...rest }) {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
   return (
     <Formik
@@ -34,24 +35,41 @@ function RegisterForm({ className, onSubmitSuccess, ...rest }) {
         policy: false
       }}
       validationSchema={Yup.object().shape({
-        firstName: Yup.string().max(255).required('First name is required'),
-        lastName: Yup.string().max(255).required('Last name is required'),
-        email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-        password: Yup.string().min(7).max(255).required('Password is required'),
+        firstName: Yup.string()
+          .max(255)
+          .required('First name is required'),
+        lastName: Yup.string()
+          .max(255)
+          .required('Last name is required'),
+        email: Yup.string()
+          .email('Must be a valid email')
+          .max(255)
+          .required('Email is required'),
+        password: Yup.string()
+          .min(7)
+          .max(255)
+          .required('Password is required'),
         policy: Yup.boolean().oneOf([true], 'This field must be checked')
       })}
-      onSubmit={async (values, {
-        setErrors,
-        setStatus,
-        setSubmitting
-      }) => {
+      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+
+        if (values !== 'underfined') {
+          values.firstName = values.firstName.charAt(0).toUpperCase() + values.firstName.slice(1);
+          values.lastName = values.lastName.charAt(0).toUpperCase() + values.lastName.slice(1);
+        }
+        
         try {
-          await dispatch(register(values));
-          onSubmitSuccess();
+          if(!register(values)){
+            onSubmitSuccess()
+          } else {
+            console.log('here')
+          }
+          
         } catch (error) {
-          setStatus({ success: false });
-          setErrors({ submit: error.message });
-          setSubmitting(false);
+          console.log(error)
+          setStatus({ success: false })
+          setErrors({ submit: error.message })
+          setSubmitting(false)
         }
       }}
     >
@@ -121,41 +139,25 @@ function RegisterForm({ className, onSubmitSuccess, ...rest }) {
             value={values.password}
             variant="outlined"
           />
-          <Box
-            alignItems="center"
-            display="flex"
-            mt={2}
-            ml={-1}
-          >
+          <Box alignItems="center" display="flex" mt={2} ml={-1}>
             <Checkbox
               checked={values.policy}
               name="policy"
               onChange={handleChange}
             />
-            <Typography
-              variant="body2"
-              color="textSecondary"
-            >
-              I have read the
-              {' '}
-              <Link
-                component="a"
-                href="#"
-                color="secondary"
-              >
+            <Typography variant="body2" color="textSecondary">
+              I have read the{' '}
+              <Link component="a" href="#" color="secondary">
                 Terms and Conditions
               </Link>
             </Typography>
           </Box>
           {Boolean(touched.policy && errors.policy) && (
-            <FormHelperText error>
-              {errors.policy}
-            </FormHelperText>
+            <FormHelperText error>{errors.policy}</FormHelperText>
           )}
           <Box mt={2}>
             <Button
               color="secondary"
-              disabled={isSubmitting}
               fullWidth
               size="large"
               type="submit"

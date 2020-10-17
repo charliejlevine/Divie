@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import Alert from 'react-bootstrap/alert'
 import {
   Box,
   Button,
@@ -16,7 +17,7 @@ import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
 import RegisterForm from './RegisterForm';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     justifyContent: 'center',
     backgroundColor: theme.palette.background.dark,
@@ -38,34 +39,19 @@ function RegisterView() {
   };
 
   return (
-    <Page
-      className={classes.root}
-      title="Register"
-    >
+    <Page className={classes.root} title="Register">
       <Container maxWidth="sm">
-        <Box
-          mb={5}
-          display="flex"
-          alignItems="center"
-        >
+        <Box mb={5} display="flex" alignItems="center">
           <RouterLink to="/">
             <Logo />
           </RouterLink>
-          <Button
-            component={RouterLink}
-            to="/"
-            className={classes.backButton}
-          >
+          <Button component={RouterLink} to="/" className={classes.backButton}>
             Back to home
           </Button>
         </Box>
         <Card>
           <CardContent>
-            <Typography
-              gutterBottom
-              variant="h2"
-              color="textPrimary"
-            >
+            <Typography gutterBottom variant="h2" color="textPrimary">
               Sign up
             </Typography>
             <Typography variant="subtitle1">

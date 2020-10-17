@@ -3,6 +3,9 @@
     "baseUrl": "."
   },
   "include": [
-    "src"
+    "src",
+    "functions/backend",
+    "functions/admin.js",
+    "functions/config.js"
   ]
 }

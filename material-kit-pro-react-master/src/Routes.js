@@ -1,14 +1,6 @@
 /* eslint-disable react/no-array-index-key */
-import React, {
-  lazy,
-  Suspense,
-  Fragment
-} from 'react';
-import {
-  Switch,
-  Redirect,
-  Route
-} from 'react-router-dom';
+import React, { lazy, Suspense, Fragment } from 'react';
+import { Switch, Redirect, Route } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import DocsLayout from 'src/layouts/DocsLayout';
 import MainLayout from 'src/layouts/MainLayout';
@@ -73,7 +65,9 @@ const routesConfig = [
       {
         exact: true,
         path: '/app/reports/dashboard-alternative',
-        component: lazy(() => import('src/views/reports/DashboardAlternativeView'))
+        component: lazy(() =>
+          import('src/views/reports/DashboardAlternativeView')
+        )
       },
       {
         exact: true,
@@ -88,7 +82,9 @@ const routesConfig = [
       {
         exact: true,
         path: '/app/management/customers/:customerId',
-        component: lazy(() => import('src/views/management/CustomerDetailsView'))
+        component: lazy(() =>
+          import('src/views/management/CustomerDetailsView')
+        )
       },
       {
         exact: true,
@@ -142,10 +138,7 @@ const routesConfig = [
       },
       {
         exact: true,
-        path: [
-          '/app/chat/new',
-          '/app/chat/:threadKey'
-        ],
+        path: ['/app/chat/new', '/app/chat/:threadKey'],
         component: lazy(() => import('src/views/chat/ChatView'))
       },
       {
@@ -210,6 +203,11 @@ const routesConfig = [
         exact: true,
         path: '/app/extra/charts/apex',
         component: lazy(() => import('src/views/extra/charts/ApexChartsView'))
+      },
+      {
+        exact: true,
+        path: '/app/stocks/last14days',
+        component: lazy(() => import('src/views/stocks'))
       },
       {
         exact: true,
@@ -336,34 +334,37 @@ const routesConfig = [
   }
 ];
 
-const renderRoutes = (routes) => (routes ? (
-  <Suspense fallback={<LoadingScreen />}>
-    <Switch>
-      {routes.map((route, i) => {
-        const Guard = route.guard || Fragment;
-        const Layout = route.layout || Fragment;
-        const Component = route.component;
+const renderRoutes = routes =>
+  routes ? (
+    <Suspense fallback={<LoadingScreen />}>
+      <Switch>
+        {routes.map((route, i) => {
+          const Guard = route.guard || Fragment;
+          const Layout = route.layout || Fragment;
+          const Component = route.component;
 
-        return (
-          <Route
-            key={i}
-            path={route.path}
-            exact={route.exact}
-            render={(props) => (
-              <Guard>
-                <Layout>
-                  {route.routes
-                    ? renderRoutes(route.routes)
-                    : <Component {...props} />}
-                </Layout>
-              </Guard>
-            )}
-          />
-        );
-      })}
-    </Switch>
-  </Suspense>
-) : null);
+          return (
+            <Route
+              key={i}
+              path={route.path}
+              exact={route.exact}
+              render={props => (
+                <Guard>
+                  <Layout>
+                    {route.routes ? (
+                      renderRoutes(route.routes)
+                    ) : (
+                      <Component {...props} />
+                    )}
+                  </Layout>
+                </Guard>
+              )}
+            />
+          );
+        })}
+      </Switch>
+    </Suspense>
+  ) : null;
 
 function Routes() {
   return renderRoutes(routesConfig);
